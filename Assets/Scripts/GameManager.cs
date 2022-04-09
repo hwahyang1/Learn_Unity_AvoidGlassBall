@@ -165,8 +165,13 @@ public class GameManager : MonoBehaviour
 	{
 		gameOver.SetActive(false);
 
+		currentScore = 0;
+		isNewBest = false;
+
 		highScoreText.text = "최고 " + highScore.ToString() + "점";
 		currentScoreText.text = currentScore.ToString() + "점";
+
+		currentScoreText.gameObject.SetActive(true);
 
 		if (highScore == 0)
 		{
