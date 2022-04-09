@@ -1,6 +1,6 @@
 # Learn_Unity_AvoidGlassBall
 
-엔진 버전: 2021.2.18f1
+엔진 버전: 2021.2.19f1
 
 ## 라이선스
 

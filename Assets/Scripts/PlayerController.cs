@@ -9,6 +9,8 @@ using UnityEngine;
  */
 public class PlayerController : MonoBehaviour
 {
+	private GameManager manager;
+
 	private SpriteRenderer render;
 
 	private float maxX = 8f;
@@ -16,7 +18,8 @@ public class PlayerController : MonoBehaviour
 
 	private void Start()
 	{
-		render = GetComponent<SpriteRenderer>(); // 스크립트가 붙은 gameObject의 컴포넌트를 가져 올 때는 gameObject 호출 생략
+		manager = GameObject.Find("GameManager").GetComponent<GameManager>();
+		render = GetComponent<SpriteRenderer>(); // 스크립트가 붙은 GameObject의 컴포넌트를 가져 올 때는 gameObject 호출 생략
 	}
 
 	private void Update()
@@ -45,18 +48,21 @@ public class PlayerController : MonoBehaviour
 	 */
 	public void MoveLeft()
 	{
-		if (transform.position.x > -maxX)
+		if (manager.Heart > 0)
 		{
-			render.flipX = false;
-			/*
-			 * [Note: Method] Transform.Translate(float x, float y, float y): void
-			 * 현재 위치에서 입력 된 수만큼 위치를 이동시킵니다.
-			 */
-			transform.Translate(-1f, 0f, 0f);
-		}
-		else
-		{
-			transform.position = new Vector3(-maxX, posY, 0f);
+			if (transform.position.x > -maxX)
+			{
+				render.flipX = false;
+				/*
+				 * [Note: Method] Transform.Translate(float x, float y, float y): void
+				 * 현재 위치에서 입력 된 수만큼 위치를 이동시킵니다.
+				 */
+				transform.Translate(-1f, 0f, 0f);
+			}
+			else
+			{
+				transform.position = new Vector3(-maxX, posY, 0f);
+			}
 		}
 	}
 
@@ -66,14 +72,17 @@ public class PlayerController : MonoBehaviour
 	 */
 	public void MoveRight()
 	{
-		if (transform.position.x < maxX)
+		if (manager.Heart > 0)
 		{
-			render.flipX = true;
-			transform.Translate(1f, 0f, 0f);
-		}
-		else
-		{
-			transform.position = new Vector3(maxX, posY, 0f);
+			if (transform.position.x < maxX)
+			{
+				render.flipX = true;
+				transform.Translate(1f, 0f, 0f);
+			}
+			else
+			{
+				transform.position = new Vector3(maxX, posY, 0f);
+			}
 		}
 	}
 }
