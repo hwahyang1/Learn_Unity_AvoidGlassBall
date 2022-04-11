@@ -10,6 +10,8 @@ using UnityEngine.UI;
  */
 public class GameManager : MonoBehaviour
 {
+	private readonly/*=Const*/ static string scoreKey = "HighScore";
+
 	public GameObject player;
 	public GameObject glassBall;
 
@@ -75,6 +77,13 @@ public class GameManager : MonoBehaviour
 			{
 				Debug.Log("[GameManger.Update()] 플레이어가 모든 체력을 소진하여 게임이 종료되었습니다.");
 				gameOver.SetActive(true);
+
+				if (highScore > PlayerPrefs.GetInt(scoreKey))
+				{
+					PlayerPrefs.SetInt(scoreKey, highScore);
+					PlayerPrefs.Save();
+				}
+
 				Heart--;
 			}
 			else
@@ -108,7 +117,7 @@ public class GameManager : MonoBehaviour
 			 */
 			Instantiate(glassBall, new Vector3(random_x, limitY, 0f), Quaternion.identity, ballParent.transform);
 			/*
-			 * GameObject가 이미 스폰되어 있는 경우 이 방식을 사용합니다: 
+			 * GameObject가 이미 스폰되어 있는 경우 아래와 같은 방식을 사용합니다: 
 			 * GameObject spawnedObject = Instantiate(glassBall, new Vector3(random_x, limitY, 0f), Quaternion.identity);
 			 * spawnedObject.transform.SetParent(ballParent.transform);
 			 */
@@ -159,7 +168,7 @@ public class GameManager : MonoBehaviour
 
 	/*
 	 * [Method] InitGame(): void
-	 * 게임을 초기 상태로 설정합니다. (최고점수 제외)
+	 * 게임을 초기 상태로 설정합니다.
 	 */
 	public void InitGame()
 	{
@@ -168,10 +177,23 @@ public class GameManager : MonoBehaviour
 		currentScore = 0;
 		isNewBest = false;
 
+		if (PlayerPrefs.HasKey(scoreKey))
+		{
+			highScore = PlayerPrefs.GetInt(scoreKey);
+		}
+		else
+		{
+			PlayerPrefs.SetInt(scoreKey, 0);
+			PlayerPrefs.Save();
+		}
+
 		highScoreText.text = "최고 " + highScore.ToString() + "점";
 		currentScoreText.text = currentScore.ToString() + "점";
 
-		currentScoreText.gameObject.SetActive(true);
+		if (highScore > 0)
+		{
+			currentScoreText.gameObject.SetActive(true);
+		}
 
 		if (highScore == 0)
 		{
@@ -188,5 +210,16 @@ public class GameManager : MonoBehaviour
 		nowPeriod = spawnPeriod;
 
 		player.transform.position = new Vector3(0f, -2.75f, 0f);
+	}
+
+	/*
+	 * [Method] OnResetButtonClicked(): void
+	 * '최고 점수 초기화' 버튼이 눌렸을 때 최고점수를 초기화 합니다.
+	 */
+	public void OnResetButtonClicked()
+	{
+		PlayerPrefs.SetInt(scoreKey, 0);
+		PlayerPrefs.Save();
+		Debug.Log("[GameManger.OnResetButtonClicked()] 사용자 요청으로 최고 점수를 0점으로 초기화하였습니다.");
 	}
 }
